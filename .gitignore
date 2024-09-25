@@ -26,3 +26,6 @@ dist-ssr
 *.pyc
 __pycache__/
 .venv/
+
+src-tauri/binaries/
+api.spec

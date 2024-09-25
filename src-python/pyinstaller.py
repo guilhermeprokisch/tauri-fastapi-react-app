@@ -2,8 +2,25 @@ import shutil
 import subprocess
 from pathlib import Path
 
+import PyInstaller.__main__
 
-def post_build(interface) -> None:
+HERE = Path(__file__).parent.absolute()
+path_to_main = str(HERE / "main.py")
+
+
+def install():
+    PyInstaller.__main__.run(
+        [
+            path_to_main,
+            "--onefile",
+            "--name=api",
+        ]
+    )
+
+    post_build()
+
+
+def post_build() -> None:
     """
     Pyinstaller post build hook. Version built directory, remove generated folders.
     Include rustc host information in the final binary name.
@@ -11,7 +28,6 @@ def post_build(interface) -> None:
     # Create src-tauri/binaries directories if they don't exist
     dist_path = Path("src-tauri", "binaries")
     dist_path.mkdir(parents=True, exist_ok=True)
-    version = interface.pyproject_data["tool"]["poetry"]["version"]
 
     # Get rustc host information
     try:
@@ -28,24 +44,23 @@ def post_build(interface) -> None:
         )
     except subprocess.CalledProcessError:
         host_info = ""
-        interface.write_line(
-            "  - <warning>Failed to get rustc host information</warning>"
-        )
+        print("Warning: Failed to get rustc host information")
 
-    interface.write_line("  - <b>Moving to src-tauri</b>")
-    for script in interface.pyproject_data["tool"]["poetry-pyinstaller-plugin"][
-        "scripts"
-    ]:
-        source = Path("dist", "pyinstaller", interface.platform)
+    print("Moving to src-tauri")
+
+    scripts = ["api"]  # Replace with your actual script names
+
+    for script in scripts:
+        source = Path("dist")
         destination = Path(dist_path)
         shutil.move(f"{source}/{script}", f"{destination}/{script}-{host_info}")
         shutil.rmtree(f"{source}")
-        interface.write_line(
-            f"    - Updated "
-            f"<success>{script}</success> -> "
-            f"<success>{script}_{version}_{host_info}</success>"
-        )
+        print(f"Updated {script}")
 
-    interface.write_line("  - <b>Cleaning</b>")
+    print("Cleaning")
     shutil.rmtree(Path("build"))
-    interface.write_line("    - Removed build directory")
+    print("Removed build directory")
+
+
+if __name__ == "__main__":
+    install()

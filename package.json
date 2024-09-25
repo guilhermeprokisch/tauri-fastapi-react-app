@@ -4,11 +4,11 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "vite ",
+    "dev": "vite",
     "build": "tsc && vite build && poetry build",
     "preview": "vite preview",
     "tauri": "tauri",
-    "python-build": "poetry build"
+    "pretauri": "poetry run python src-python/pyinstaller.py"
   },
   "dependencies": {
     "react": "^18.2.0",

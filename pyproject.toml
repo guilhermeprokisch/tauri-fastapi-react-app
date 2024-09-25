@@ -8,7 +8,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = ">=3.12,<3.14"
 pyinstaller = "^6.10.0"
-fastapi = {extras = ["standard"], version = "^0.115.0"}
+fastapi = { extras = ["standard"], version = "^0.115.0" }
 
 [build-system]
 requires = ["poetry-core"]
@@ -18,6 +18,5 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry-pyinstaller-plugin]
 post-build = "hooks.pyinstaller:post_build"
 
-
-[tool.poetry-pyinstaller-plugin.scripts]
-api = { source = "src-python/main.py", type = "onefile", bundle = false }
+[tool.poetry.scripts]
+build = "src-python.pyinstaller:install"
