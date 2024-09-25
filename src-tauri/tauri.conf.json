@@ -1,0 +1,56 @@
+{
+  "$schema": "https://schema.tauri.app/config/1",
+  "build": {
+    "beforeDevCommand": "pnpm dev",
+    "beforeBuildCommand": "pnpm build",
+    "devPath": "http://localhost:1420",
+    "distDir": "../dist"
+  },
+  "package": {
+    "productName": "my-tauri-app",
+    "version": "0.1.0"
+  },
+  "tauri": {
+    "allowlist": {
+      "all": false,
+      "http": {
+        "all": true,
+        "request": true,
+        "scope": ["http://localhost:8008/*"]
+      },
+      "shell": {
+        "sidecar": true,
+        "scope": [
+          {
+            "name": "api/fastapi-server",
+            "sidecar": true,
+            "args": ["--port", "8008"]
+          }
+        ]
+      }
+    },
+    "windows": [
+      {
+        "title": "my-tauri-app",
+        "width": 800,
+        "height": 600
+      }
+    ],
+    "security": {
+      "csp": null
+    },
+    "bundle": {
+      "active": true,
+      "targets": "all",
+      "identifier": "com.my-tauri-app.app",
+      "icon": [
+        "icons/32x32.png",
+        "icons/128x128.png",
+        "icons/128x128@2x.png",
+        "icons/icon.icns",
+        "icons/icon.ico"
+      ],
+      "externalBin": ["binaries/api"]
+    }
+  }
+}
