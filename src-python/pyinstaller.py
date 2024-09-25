@@ -1,30 +1,33 @@
+import logging
 import shutil
 import subprocess
 from pathlib import Path
 
 import PyInstaller.__main__
+from colorama import Fore, Style, init
 
-HERE = Path(__file__).parent.absolute()
-path_to_main = str(HERE / "main.py")
+init()
+
+logging.basicConfig(format="%(message)s")
+logger = logging.getLogger(__name__)
+
+
+def colored_log(message, color=Fore.WHITE):
+    logger.info(f"{color}{message}{Style.RESET_ALL}")
 
 
 def install():
+    colored_log("Build Fast Api Binary...", Fore.CYAN)
+    path_to_main = str(Path("src-python/main.py").absolute())
     PyInstaller.__main__.run(
-        [
-            path_to_main,
-            "--onefile",
-            "--name=api",
-        ]
+        [path_to_main, "--onefile", "--name=api", "--log-level=ERROR"]
     )
+    post_install()
 
-    post_build()
 
+def post_install() -> None:
+    colored_log("Running post-build steps...", Fore.CYAN)
 
-def post_build() -> None:
-    """
-    Pyinstaller post build hook. Version built directory, remove generated folders.
-    Include rustc host information in the final binary name.
-    """
     # Create src-tauri/binaries directories if they don't exist
     dist_path = Path("src-tauri", "binaries")
     dist_path.mkdir(parents=True, exist_ok=True)
@@ -44,22 +47,20 @@ def post_build() -> None:
         )
     except subprocess.CalledProcessError:
         host_info = ""
-        print("Warning: Failed to get rustc host information")
+        colored_log("Warning: Failed to get rustc host information", Fore.YELLOW)
 
-    print("Moving to src-tauri")
-
+    colored_log("Moving files to src-tauri...", Fore.CYAN)
     scripts = ["api"]  # Replace with your actual script names
-
     for script in scripts:
         source = Path("dist")
         destination = Path(dist_path)
         shutil.move(f"{source}/{script}", f"{destination}/{script}-{host_info}")
         shutil.rmtree(f"{source}")
-        print(f"Updated {script}")
+        colored_log(f"Updated {script}", Fore.GREEN)
 
-    print("Cleaning")
+    colored_log("Cleaning up...", Fore.CYAN)
     shutil.rmtree(Path("build"))
-    print("Removed build directory")
+    colored_log("Removed build directory", Fore.GREEN)
 
 
 if __name__ == "__main__":
