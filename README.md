@@ -1,7 +1,7 @@
 # Tauri + React + TypeScript + FastAPI + Vite Template
 <img width="912" alt="image" src="https://github.com/user-attachments/assets/4ae49bca-43d2-40c0-ab6e-9d8dcf453fb1">
 
-This template provides a starting point for developing desktop applications using Tauri with a React frontend and a FastAPI backend. It combines the power of Rust-based Tauri for creating lightweight, secure desktop apps, with the flexibility of React for the UI, and the robustness of FastAPI for the backend API.
+This template provides a starting point for developing desktop applications using Tauri with a React frontend and a FastAPI backend.
 
 ## Features
 
