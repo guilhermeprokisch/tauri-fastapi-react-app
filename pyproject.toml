@@ -15,9 +15,5 @@ colorama = "^0.4.6"
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
-
-[tool.poetry-pyinstaller-plugin]
-post-build = "hooks.pyinstaller:post_build"
-
 [tool.poetry.scripts]
 build = "src-python.pyinstaller:install"
